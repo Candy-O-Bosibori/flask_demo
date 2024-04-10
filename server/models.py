@@ -65,7 +65,7 @@ db = SQLAlchemy(metadata=metadata)
 
 class User(db.Model, SerializerMixin):
     __tablename__='users'
-    serialize_rules = ('-registrations.user',)
+    
 
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String)
@@ -73,18 +73,18 @@ class User(db.Model, SerializerMixin):
 
     events = association_proxy('registrations', 'event',
                                  creator=lambda event_obj: Registration(event=event_obj))
-
+    serialize_rules = ('-registrations.user',)
 
 
 class Event(db.Model, SerializerMixin):
     __tablename__='events'
-    serialize_rules = ('-registrations.event',)
+    
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     location = db.Column(db.String(100), nullable=False)
     registrations = db.relationship('Registration', back_populates='event',  cascade='all, delete-orphan')
-
+    serialize_rules = ('-registrations.event',)
     users = association_proxy('registrations', 'user', creator=lambda user_obj: Registration(user=user_obj))
 
 
@@ -93,13 +93,13 @@ class Event(db.Model, SerializerMixin):
 class Registration(db.Model,SerializerMixin):
     __tablename__='registrations'
 
-    serialize_rules = ('-users.registrations', '-events.registrations',)
+    
     id = db.Column(db.Integer, primary_key=True)
-    start_date = db.Column(db.DateTime)
-    end_date = db.Column(db.DateTime)
+    registration_date = db.Column(db.DateTime)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
 
     user= db.relationship('User', back_populates= 'registrations')
     event = db.relationship('Event', back_populates= 'registrations')
+    serialize_rules = ('-users.registrations', '-events.registrations',)
