@@ -62,6 +62,7 @@ db = SQLAlchemy(metadata=metadata)
 #         return f'<Meeting {self.id}, {self.topic}, {self.scheduled_time}, {self.location}>'
 
 
+
 class User(db.Model, SerializerMixin):
     __tablename__='users'
     serialize_rules = ('-registrations.user',)
