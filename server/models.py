@@ -26,6 +26,7 @@ class User(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String)
     registrations = db.relationship('Registration', back_populates='user',  cascade='all, delete-orphan')
+    
 
     events = association_proxy('registrations', 'event',
                                  creator=lambda event_obj: Registration(event=event_obj))
